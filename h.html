@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探探风格交友界面</title>
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            height: 90vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 头部导航 */
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .header img {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        /* 主要卡片区域 */
+        .card-container {
+            position: relative;
+            width: 90%;
+            height: 65vh;
+            overflow: hidden;
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 用户信息 */
+        .user-info {
+            position: absolute;
+            bottom: 20px;
+            left: 15px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info span {
+            margin-left: 5px;
+            font-size: 18px;
+            opacity: 0.8;
+        }
+
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .purple { background: #A649F7; color: white; }
+        .green { background: #1BC47D; color: white; }
+        .blue { background: #1D9BF0; color: white; }
+        .red { background: #FF3B30; color: white; }
+        .yellow { background: #FFD700; color: white; }
+
+        /* 底部导航 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+
+        .nav-item {
+            font-size: 24px;
+            color: #FF4B2B;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 头部导航 -->
+        <div class="header">
+            <img src="https://cdn-icons-png.flaticon.com/512/54/54481.png" alt="搜索">
+            <img src="https://cdn-icons-png.flaticon.com/512/60/60781.png" alt="设置">
+        </div>
+
+        <!-- 卡片容器 -->
+        <div class="card-container">
+            <div class="card">
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User">
+                <div class="user-info">
+                    戴 <span>30</span>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://randomuser.me/api/portraits/women/25.jpg" alt="User">
+                <div class="user-info">
+                    小红 <span>24</span>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://randomuser.me/api/portraits/men/28.jpg" alt="User">
+                <div class="user-info">
+                    小明 <span>27</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="button-group">
+            <div class="button purple">🔄</div>
+            <div class="button green" onclick="swipeCard('left')">❌</div>
+            <div class="button blue">⭐</div>
+            <div class="button red" onclick="swipeCard('right')">❤️</div>
+            <div class="button yellow">⚡</div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="nav-item">❤️</div>
+            <div class="nav-item">💬</div>
+            <div class="nav-item">👤</div>
+        </div>
+    </div>
+
+    <script>
+        let cards = document.querySelectorAll(".card");
+        let index = 0;
+        let startX = 0, endX = 0;
+
+        function swipeCard(direction) {
+            if (index >= cards.length) return;
+
+            let card = cards[index];
+            card.style.transform = `translateX(${direction === "right" ? '200px' : '-200px'}) rotate(${direction === "right" ? '15' : '-15'}deg)`;
+            card.style.opacity = "0";
+
+            index++;
+            setTimeout(() => {
+                card.style.display = "none";
+            }, 300);
+        }
+
+        // 触摸滑动支持（适用于手机）
+        document.querySelector(".card-container").addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        document.querySelector(".card-container").addEventListener("touchend", (e) => {
+            endX = e.changedTouches[0].clientX;
+            if (endX - startX > 50) {
+                swipeCard("right"); // 右滑
+            } else if (startX - endX > 50) {
+                swipeCard("left"); // 左滑
+            }
+        });
+    </script>
+
+</body>
+</html>
